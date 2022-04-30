@@ -9,6 +9,8 @@ char *s21_strtok(char *str, const char *denim) {
 	int cut = 0;
 	char *res = NULL;
 	int buf[256] = {0};
+	if (!denim || !str)
+		return NULL;
 	if (static_str)
 		str = static_str;
 	for (int i = 0; denim[i]; i++)
@@ -28,18 +30,22 @@ char *s21_strtok(char *str, const char *denim) {
 			static_str = &str[i];
 		}
 	}
+	if (!res)
+		return NULL;
+	if (*res == '\0')
+		return NULL;
 	return res;
 }
 int main () {
-   char str[80] = "This - tutor - web";
-   const char s[3] = "-";
+   char str[80] = "this is world";
+   const char s[2] = " ";
    char *token;
    
    /* get the first token */
    token = s21_strtok(str, s);
-    // token = s21_strtok(str, s);
-	    // token = s21_strtok(str, s);
-   printf( "TOKEN = %s\n STR = %s\n", token, str );
+    token = s21_strtok(str, s);
+	    token = s21_strtok(str, s);
+   printf( "TOKEN = %s\n", token );
    /* walk through other tokens */
 //    while( token != NULL ) {
 //       printf( " %s\n", token );
