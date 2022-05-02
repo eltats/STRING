@@ -2,5 +2,5 @@
 
 char *s21_strerror(int errnum)
 {
-
+    
 }
