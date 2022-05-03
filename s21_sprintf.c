@@ -1,11 +1,5 @@
 #include "s21_string.h"
 // %[%][width][.precision][size]type, flags can be placed in any order << ORDER
-int is_digit(int c)
-{
-    if (c >= '0' && c <= '9')
-        return 1;
-    return 0;
-}
 
 int is_flag(int c)
 {
