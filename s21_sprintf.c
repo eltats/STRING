@@ -1,5 +1,11 @@
 #include "s21_string.h"
 // %[%][width][.precision][size]type, flags can be placed in any order << ORDER
+int is_digit(int c)
+{
+    if (c >= '0' && c <= '9')
+        return 1;
+    return 0;
+} // В ОТДЕЛЬНЫЙ ФАЙЛ фё
 
 int is_flag(int c)
 {
@@ -35,6 +41,12 @@ void processing(char *str, const char *format, int *len, va_list argp)
     {
         *str = (char)va_arg(argp, int);
         (*len)++;
+    }
+    if (*(format + *len) == 'd')
+    {
+        int digit = 0;
+        digit = va_arg(argp, int);
+        
     }
 }
 
