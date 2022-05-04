@@ -13,6 +13,46 @@ int is_flag(int c)
         return 1;
     return 0;
 }
+int s21_strlen(char *str)
+{
+    int res = 0;
+    while (str[res])
+        res++;
+    return res;
+}
+
+// char *reversestr(char *buf)
+// {
+//     char tmp[256] = {};
+//     int len = s21_strlen(buf) - 1;
+//     for (int i = 0; buf[i]; i++, len--)
+//     {
+//         tmp[i] = buf[len];
+//     }
+//     // buf = tmp;
+//     return tmp;
+// }
+
+void strd(char *str, int digit, int *len)
+{
+    char buf[256] = {0};
+    char tmp[256] = {0};
+    int i = 0;
+    for (; digit > 0; i++)
+    {
+        buf[i] = digit % 10 + '0';
+        digit /= 10;
+    }
+    buf[i] = '\0';
+    int strlen = s21_strlen(buf) - 1;
+    for (int i = 0; buf[i]; i++, strlen--)
+    {
+        tmp[i] = buf[strlen];
+    }
+    // buf = tmp;
+    *str = tmp;
+    // printf("%s\n", tmp);
+}
 
 void processing(char *str, const char *format, int *len, va_list argp)
 {
@@ -46,7 +86,7 @@ void processing(char *str, const char *format, int *len, va_list argp)
     {
         int digit = 0;
         digit = va_arg(argp, int);
-        
+        strd(str, digit, len);
     }
 }
 
@@ -80,7 +120,8 @@ int main()
 {
     char str[100] = {};
     char a = 'A';
-    sprintf(str, "Hc%%I%c\n", a);
+    int b = 321001;
+    s21_sprintf(str, "%d\n", b);
     printf("%s", str);
     return 0;
 }
