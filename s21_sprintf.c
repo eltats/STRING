@@ -49,7 +49,7 @@ int s21_strlen(char *str)
 //     return tmp;
 // }
 
-void strd(char *str, int digit, int *len, int width)
+void strd(char *str, int digit, int *len, t_flags fl)
 {
     char buf[256] = {0};
     char tmp[256] = {0};
@@ -61,11 +61,12 @@ void strd(char *str, int digit, int *len, int width)
     }
     buf[i] = '\0';
     int strlen = s21_strlen(buf) - 1;
-    if (width)
+    if (fl.width)
     {
-        width -= (strlen + 1);
-        for (; width > 0; width--, (*len)++)
-            str[*len] = ' ';
+        fl.width -= (strlen + 1);
+        if (!fl.fminus)
+            for (; fl.width > 0; fl.width--, (*len)++)
+                str[*len] = ' ';
     }
     *len += strlen + 1;
     tmp[strlen + 1] = '\0';
@@ -75,6 +76,9 @@ void strd(char *str, int digit, int *len, int width)
         tmp[i] = buf[strlen];
     }
     s21_strcat(str, tmp);
+    if (fl.width && fl.fminus)
+        for (; fl.width > 0; fl.width--, (*len)++)
+            str[*len] = ' ';
     // buf = tmp;
     // *str = *tmp;
     // printf("%s\n", tmp);
@@ -82,18 +86,25 @@ void strd(char *str, int digit, int *len, int width)
 
 void processing(char *str, const char *format, int *len, va_list argp, int *i)
 {
-    int width = 0;
+    t_flags fl;
+    // int width = 0;
+    // short int fminus = 0;
     // printf("%c\n", *str);
     // printf("%c\n", *format);
     (*i)++;
     // (*len)++;
     while (is_flag(format[*i]) == 0)
     {
+        if (format[*i] == '-')
+        {
+            fl.fminus = 1;
+            (*i)++;
+        }
         if (is_digit(format[*i]))
         {
             while (is_digit(format[*i]))
             {
-                width = (width * 10) + (format[*i] - '0');  
+                fl.width = (fl.width * 10) + (format[*i] - '0');  
                 (*i)++;
             }
         }
@@ -108,11 +119,16 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
     }
     if (*(format + *i) == '%' || *(format + *i) == 'c')
     {
-        if (width)
+        if (fl.width && fl.fminus == 1)
         {
-            for (int j = 0; j < width - 1; j++, (*len)++)
-                str[*len] = ' ';
+            if (*(format + *i) == '%')
+                str[*len] = *(format + *i);
+            else
+                str[*len] = (char)va_arg(argp, int);
         }
+        if (fl.width && !fl.fminus)
+            for (int j = 0; j < fl.width - 1; j++, (*len)++)
+                str[*len] = ' ';
         if (*(format + *i) == '%')
             str[*len] = *(format + *i);
         else
@@ -129,18 +145,21 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
     {
         int digit = 0;
         digit = va_arg(argp, int);
-        strd(str, digit, len, width);
+        strd(str, digit, len, fl);
     }
     if (*(format + *i) == 's')
     {
         char *tmp = va_arg(argp, char *);
-        width -= s21_strlen(tmp);
-        while(width--)
+        fl.width -= s21_strlen(tmp);
+        if (fl.width > 0 && fl.fminus)
+            s21_strcat(str, tmp);
+        while(fl.width--)
         {
             str[*len] = ' ';
             (*len)++;
         }
-        s21_strcat(str, tmp);
+        if (!fl.fminus)
+            s21_strcat(str, tmp);
         *len += s21_strlen(tmp);
     }
     // (*i)++;
@@ -182,7 +201,7 @@ int main()
     char a = 'Q';
     int b = 321001;
     int res = 0;
-    res = sprintf(str, "HELLO %-10% %10s%5d  %2c\n", "JOHN", 228, 'K');
+    res = s21_sprintf(str, "HELLO %10% %10s%5d  %2c\n", "JOHN", 228, 'K');
     printf("%s%d\n", str, res);
     return 0;
 }

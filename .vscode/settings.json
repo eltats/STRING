@@ -1,6 +1,7 @@
 {
   "files.associations": {
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "s21_string.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/clang",
   "C_Cpp_Runner.cppCompilerPath": "/usr/bin/clang++",
