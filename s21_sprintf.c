@@ -25,7 +25,7 @@ char *s21_strcat(char *dest, const char *src)
 
 int is_flag(int c)
 {
-    if (c == 'c' || c == 'd' || c == 'i' || c == 'f' || c == 's' || c == 'u')
+    if (c == 'c' || c == 'd' || c == 'i' || c == 'f' || c == 's' || c == 'u' || c == '%')
         return 1;
     return 0;
 }
@@ -49,7 +49,7 @@ int s21_strlen(char *str)
 //     return tmp;
 // }
 
-void strd(char *str, int digit, int *len)
+void strd(char *str, int digit, int *len, int width)
 {
     char buf[256] = {0};
     char tmp[256] = {0};
@@ -61,6 +61,12 @@ void strd(char *str, int digit, int *len)
     }
     buf[i] = '\0';
     int strlen = s21_strlen(buf) - 1;
+    if (width)
+    {
+        width -= (strlen + 1);
+        for (; width > 0; width--, (*len)++)
+            str[*len] = ' ';
+    }
     *len += strlen + 1;
     tmp[strlen + 1] = '\0';
     i = 0;
@@ -76,21 +82,23 @@ void strd(char *str, int digit, int *len)
 
 void processing(char *str, const char *format, int *len, va_list argp, int *i)
 {
+    int width = 0;
     // printf("%c\n", *str);
     // printf("%c\n", *format);
     (*i)++;
     // (*len)++;
-    if (*(format + *i) == '%')
+    while (is_flag(format[*i]) == 0)
     {
-        str[*len] = *(format + *i);
-        (*len)++;
-        return;
-    }
-    while (is_flag(*(format + *i)) == 0)
-    {
-        (*i)++;
         if (is_digit(format[*i]))
-            
+        {
+            while (is_digit(format[*i]))
+            {
+                width = (width * 10) + (format[*i] - '0');  
+                (*i)++;
+            }
+        }
+        else
+            (*i)++;
         // if (*format == '.')
         //     // PRECISION
         // if (*format )
@@ -98,24 +106,42 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
         // if (*format)
         //     // SPECIFIER
     }
-
-    if (*(format + *i) == 'c')
+    if (*(format + *i) == '%' || *(format + *i) == 'c')
     {
-        str[*len] = (char)va_arg(argp, int);
+        if (width)
+        {
+            for (int j = 0; j < width - 1; j++, (*len)++)
+                str[*len] = ' ';
+        }
+        if (*(format + *i) == '%')
+            str[*len] = *(format + *i);
+        else
+            str[*len] = (char)va_arg(argp, int);
         (*len)++;
-        // (*i)++;
     }
+    // if (*(format + *i) == 'c')
+    // {
+    //     str[*len] = (char)va_arg(argp, int);
+    //     (*len)++;
+    //     // (*i)++;
+    // }
     if (*(format + *i) == 'd')
     {
         int digit = 0;
         digit = va_arg(argp, int);
-        strd(str, digit, len);
+        strd(str, digit, len, width);
     }
     if (*(format + *i) == 's')
     {
         char *tmp = va_arg(argp, char *);
-        *len += s21_strlen(tmp);
+        width -= s21_strlen(tmp);
+        while(width--)
+        {
+            str[*len] = ' ';
+            (*len)++;
+        }
         s21_strcat(str, tmp);
+        *len += s21_strlen(tmp);
     }
     // (*i)++;
 }
@@ -156,7 +182,7 @@ int main()
     char a = 'Q';
     int b = 321001;
     int res = 0;
-    res = s21_sprintf(str, "hello %d%c ABAB %% ABAB%s\n", b, a, "boobies");
+    res = sprintf(str, "HELLO %-10% %10s%5d  %2c\n", "JOHN", 228, 'K');
     printf("%s%d\n", str, res);
     return 0;
 }
