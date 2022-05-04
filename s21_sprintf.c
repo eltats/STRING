@@ -7,6 +7,22 @@ int is_digit(int c)
     return 0;
 } // В ОТДЕЛЬНЫЙ ФАЙЛ фё
 
+char *s21_strcat(char *dest, const char *src)
+{
+	int i = 0;
+	int j = 0;
+
+	while (dest[i])
+		i++;
+	while (src[j])
+	{
+		dest[i + j] = src[j];
+		j++;
+	}
+	dest[i + j] = '\0';
+	return dest;
+}
+
 int is_flag(int c)
 {
     if (c == 'c' || c == 'd' || c == 'i' || c == 'f' || c == 's' || c == 'u')
@@ -45,28 +61,34 @@ void strd(char *str, int digit, int *len)
     }
     buf[i] = '\0';
     int strlen = s21_strlen(buf) - 1;
-    for (int i = 0; buf[i]; i++, strlen--)
+    *len += strlen + 1;
+    tmp[strlen + 1] = '\0';
+    i = 0;
+    for (; buf[i]; i++, strlen--)
     {
         tmp[i] = buf[strlen];
     }
+    s21_strcat(str, tmp);
     // buf = tmp;
-    *str = tmp;
+    // *str = *tmp;
     // printf("%s\n", tmp);
 }
 
-void processing(char *str, const char *format, int *len, va_list argp)
+void processing(char *str, const char *format, int *len, va_list argp, int *i)
 {
     // printf("%c\n", *str);
     // printf("%c\n", *format);
-    (*len)++;
-    if (*(format + *len) == '%')
+    (*i)++;
+    // (*len)++;
+    if (*(format + *i) == '%')
     {
-        *str = *(format + *len);
+        str[*len] = *(format + *i);
+        (*len)++;
         return;
     }
-    while (is_flag(*(format + *len)) == 0)
+    while (is_flag(*(format + *i)) == 0)
     {
-        (*len)++;
+        (*i)++;
         // if (is_digit(*format))
         //     // WIDTH
         // if (*format == '.')
@@ -77,17 +99,19 @@ void processing(char *str, const char *format, int *len, va_list argp)
         //     // SPECIFIER
     }
 
-    if (*(format + *len) == 'c')
+    if (*(format + *i) == 'c')
     {
-        *str = (char)va_arg(argp, int);
+        str[*len] = (char)va_arg(argp, int);
         (*len)++;
+        // (*i)++;
     }
-    if (*(format + *len) == 'd')
+    if (*(format + *i) == 'd')
     {
         int digit = 0;
         digit = va_arg(argp, int);
         strd(str, digit, len);
     }
+    // (*i)++;
 }
 
 int s21_sprintf(char *str,  char *format, ...)
@@ -96,22 +120,26 @@ int s21_sprintf(char *str,  char *format, ...)
     va_list argp;
     va_start(argp, format);
     // for (int i = 0; format[i], i++;)
-    while (format[len])
+    // while (format[len])
+    for (int i = 0; format[i]; i++)
     {
-        if (format[len] == '%')
+        if (format[i] == '%')
         {
             // printf("%d\n\n", len);
-            processing(str, format, &len, argp);
+            processing(str, format, &len, argp, &i);
+            continue;
+            // i++;
             // *str = *(str + (len - old_len));
-            str++;
+            // str++;
             // printf("%d\n", len);
         }
         // else
-        *str = *(format + len);
-        str++;
+        // *str = *(format + len);
+        // str++;
+        str[len] = format[i];
         len++;
     }
-    *str = '\0';
+    str[len + 1] = '\0';
     va_end(argp);
     return len;
 }
@@ -119,9 +147,10 @@ int s21_sprintf(char *str,  char *format, ...)
 int main()
 {
     char str[100] = {};
-    char a = 'A';
+    char a = 'Q';
     int b = 321001;
-    s21_sprintf(str, "%d\n", b);
-    printf("%s", str);
+    int res = 0;
+    res = sprintf(str, "hello %d%c ABAB %% ABAB\n", b, a);
+    printf("%s%d\n", str, res);
     return 0;
 }

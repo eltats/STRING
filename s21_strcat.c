@@ -16,12 +16,12 @@ char *s21_strcat(char *dest, const char *src)
 	return dest;
 }
 
-int main(){
-	// char *str = "kek";
-	char str[80] = "a";
-	char kek[2] = "s";
-	// char *str2 = "mem";
-	s21_strcat(str, kek);
-	printf("%s\n", str);
-	return 0;
-}
+// int main(){
+// 	// char *str = "kek";
+// 	char str[80] = "aaefdbf";
+// 	char kek[30] = "AEGEGAG";
+// 	// char *str2 = "mem";
+// 	s21_strcat(str, kek);
+// 	printf("%s\n", str);
+// 	return 0;
+// }
