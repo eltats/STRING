@@ -89,8 +89,8 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
     while (is_flag(*(format + *i)) == 0)
     {
         (*i)++;
-        // if (is_digit(*format))
-        //     // WIDTH
+        if (is_digit(format[*i]))
+            
         // if (*format == '.')
         //     // PRECISION
         // if (*format )
@@ -110,6 +110,12 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
         int digit = 0;
         digit = va_arg(argp, int);
         strd(str, digit, len);
+    }
+    if (*(format + *i) == 's')
+    {
+        char *tmp = va_arg(argp, char *);
+        *len += s21_strlen(tmp);
+        s21_strcat(str, tmp);
     }
     // (*i)++;
 }
@@ -150,7 +156,7 @@ int main()
     char a = 'Q';
     int b = 321001;
     int res = 0;
-    res = sprintf(str, "hello %d%c ABAB %% ABAB\n", b, a);
+    res = s21_sprintf(str, "hello %d%c ABAB %% ABAB%s\n", b, a, "boobies");
     printf("%s%d\n", str, res);
     return 0;
 }
