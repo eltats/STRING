@@ -7,6 +7,8 @@ typedef struct s_flags
 {
 	int width;
 	short int fminus;
+	short int fplus;
+	short int fspace;
 }			t_flags;
 int s21_memcmp(const void *str1, const void *str2, size_t n);
 int is_digit(int c);
