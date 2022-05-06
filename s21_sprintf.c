@@ -1,11 +1,28 @@
 #include "s21_string.h"
 // %[%][width][.precision][size]type, flags can be placed in any order << ORDER
+// КАКИЕ_ТО ФУНКЦИИ ИСПОЛЬЗОВАНЫ ИЗ СТРИНГ Х/ ВЗЯТЬ НАШИ КОГДА БУДУТ ВСЕ 20 ФУНКЦИЙ
 int is_digit(int c)
 {
     if (c >= '0' && c <= '9')
         return 1;
     return 0;
 } // В ОТДЕЛЬНЫЙ ФАЙЛ фё
+
+char *s21_strncat(char *dest, const char *src, size_t n)
+{
+	int i = 0;
+	int j = 0;
+
+	while (dest[i])
+		i++;
+	while (src[j] && j < n)
+	{
+		dest[i + j] = src[j];
+		j++;
+	}
+	dest[i + j] = '\0';
+	return dest;
+}
 
 char *s21_strcat(char *dest, const char *src)
 {
@@ -184,20 +201,22 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
     if (*(format + *i) == 's')
     {
         char *tmp = va_arg(argp, char *);
-        fl.width -= s21_strlen(tmp);
+        if (fl.precision >= s21_strlen(tmp) || fl.precision == 0)
+            fl.precision = s21_strlen(tmp);
+        fl.width -= fl.precision;
         if (fl.width <= 0)
             fl.fminus = 0;
         if (fl.width > 0 && fl.fminus)
         {
-            s21_strcat(str, tmp);
-            *len += s21_strlen(tmp);
+            s21_strncat(str, tmp, fl.precision);
+            *len += fl.precision;
         }
         for (; fl.width > 0; fl.width--, (*len)++)
             str[*len] = ' ';
         if (!fl.fminus)
         {
-            s21_strcat(str, tmp);
-            *len += s21_strlen(tmp);
+            s21_strncat(str, tmp, fl.precision);
+            *len += fl.precision;
         }
     }
 }
@@ -227,11 +246,11 @@ int main()
     char str[100] = {};
     char a = 'Q';
     int b = 10;
-    char *format = "%+d\n";
-    char *ex = "HI";
-    int res = s21_sprintf(str, format,  b);
+    char *format = "%5s\n";
+    char *ex = "HIBITCHES";
+    int res = s21_sprintf(str, format,  ex);
     printf("%s%d\n", str, res);
-    res = sprintf(str, format,  b);
+    res = sprintf(str, format,  ex);
     printf("\n%s%d\n", str, res);
     return 0;
 }
