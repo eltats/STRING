@@ -86,7 +86,9 @@ void strd(char *str, int digit, int *len, t_flags fl)
 
 void processing(char *str, const char *format, int *len, va_list argp, int *i)
 {
-    t_flags fl;
+    t_flags fl = {};
+    fl.width = 0;
+    fl.fminus = 0;
     // int width = 0;
     // short int fminus = 0;
     // printf("%c\n", *str);
@@ -125,7 +127,12 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
                 str[*len] = *(format + *i);
             else
                 str[*len] = (char)va_arg(argp, int);
+            (*len)++;
+            for (int j = 0; j < fl.width - 1; j++, (*len)++)
+                str[*len] = ' ';
         }
+        else 
+        {
         if (fl.width && !fl.fminus)
             for (int j = 0; j < fl.width - 1; j++, (*len)++)
                 str[*len] = ' ';
@@ -134,6 +141,7 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
         else
             str[*len] = (char)va_arg(argp, int);
         (*len)++;
+        }
     }
     // if (*(format + *i) == 'c')
     // {
@@ -152,15 +160,17 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
         char *tmp = va_arg(argp, char *);
         fl.width -= s21_strlen(tmp);
         if (fl.width > 0 && fl.fminus)
-            s21_strcat(str, tmp);
-        while(fl.width--)
         {
-            str[*len] = ' ';
-            (*len)++;
-        }
-        if (!fl.fminus)
             s21_strcat(str, tmp);
-        *len += s21_strlen(tmp);
+            *len += s21_strlen(tmp);
+        }
+        for (; fl.width > 0; fl.width--, (*len)++)
+            str[*len] = ' ';
+        if (!fl.fminus)
+        {
+            s21_strcat(str, tmp);
+            *len += s21_strlen(tmp);
+        }
     }
     // (*i)++;
 }
@@ -201,7 +211,7 @@ int main()
     char a = 'Q';
     int b = 321001;
     int res = 0;
-    res = s21_sprintf(str, "HELLO %10% %10s%5d  %2c\n", "JOHN", 228, 'K');
+    res = sprintf(str, "HELLO %-1% %-1s%-5d  %-1c\n", "JOHN", 228, 'K');
     printf("%s%d\n", str, res);
     return 0;
 }
