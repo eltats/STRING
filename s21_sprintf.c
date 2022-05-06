@@ -39,7 +39,11 @@ int s21_strlen(char *str)
 int intlen(int a)
 {
     int i = 0;
+    if (a < 0)
+        a *= -1;
     // while (a / 10)
+    if (a == 0)
+        return 1;
     for (; a > 0; i++)
         a /= 10;
     return i;
@@ -51,13 +55,21 @@ void strd(char *str, int digit, int *len, t_flags fl)
     char tmp[256] = {0};
     int i = 0;
     int j = 0;
+    int numlen = intlen(digit);
     // int dd = digit;
+    if (fl.precision > numlen)
+    {
+        fl.precision -= numlen;
+        int prec = fl.precision;
+        for (; prec >= 0; prec--, j++)
+            buf[numlen + prec - 1] = '0';
+    }
     if ((fl.fspace || fl.fplus) && digit >= 0)
     {
         if (fl.fplus)
-            buf[intlen(digit)] = '+';
+            buf[numlen + fl.precision] = '+';
         else
-            buf[intlen(digit)] = ' ';
+            buf[numlen + fl.precision] = ' ';
         // (*len)++;
         j++;
     }
@@ -71,7 +83,7 @@ void strd(char *str, int digit, int *len, t_flags fl)
         else
         {
             digit *= -1;
-            buf[intlen(digit)] = '-';
+            buf[numlen + fl.precision] = '-';
             j++;
         }
     }
@@ -108,10 +120,18 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
     fl.width = 0;
     fl.fminus = 0;
     fl.fplus = 0;
+    fl.precision = 0;
     fl.fspace = 0;
     (*i)++;
     while (is_flag(format[*i]) == 0)
     {
+        if (format[*i] == '.')
+        {
+            (*i)++;
+            for (; is_digit(format[*i]); (*i)++)
+                fl.precision = (fl.precision * 10) + (format[*i] - '0');
+            continue;
+        }
         if (format[*i] == '-')
             fl.fminus = 1;
         if (format[*i] == '+')
@@ -206,9 +226,12 @@ int main()
 {
     char str[100] = {};
     char a = 'Q';
-    int b = 321001;
-    int res = 0;
-    res = s21_sprintf(str, "% 10d\n", -10);
+    int b = 10;
+    char *format = "%+d\n";
+    char *ex = "HI";
+    int res = s21_sprintf(str, format,  b);
     printf("%s%d\n", str, res);
+    res = sprintf(str, format,  b);
+    printf("\n%s%d\n", str, res);
     return 0;
 }
