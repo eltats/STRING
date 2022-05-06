@@ -42,7 +42,27 @@ void strd(char *str, int digit, int *len, t_flags fl)
     char buf[256] = {0};
     char tmp[256] = {0};
     int i = 0;
-    int dd = digit;
+    // int dd = digit;
+    if ((fl.fspace || fl.fplus) && digit >= 0)
+    {
+        if (fl.fplus)
+            str[*len] = '+';
+        else
+            str[*len] = ' ';
+        fl.width--;
+        (*len)++;
+    }
+    if (digit <= 0)
+    {
+        if (digit == 0)
+            buf[i] = '0';
+        else
+        {
+            buf[i] = '-';
+            digit *= -1;
+        }
+        i++;
+    }
     for (; digit > 0; i++)
     {
         buf[i] = digit % 10 + '0';
@@ -81,19 +101,11 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
     while (is_flag(format[*i]) == 0)
     {
         if (format[*i] == '-')
-        {
             fl.fminus = 1;
-            (*i)++;
-        }
         if (format[*i] == '+')
-        {
             fl.fplus = 1;
-        }
         if (format[*i] == ' ')
-        {
             fl.fspace = 1;
-            (*i)++;
-        }
         if (is_digit(format[*i]))
         {
             while (is_digit(format[*i]))
@@ -184,7 +196,7 @@ int main()
     char a = 'Q';
     int b = 321001;
     int res = 0;
-    res = sprintf(str, "%+d\n", -228);
+    res = s21_sprintf(str, "%+d\n", 0);
     printf("%s%d\n", str, res);
     return 0;
 }
