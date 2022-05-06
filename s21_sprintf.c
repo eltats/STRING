@@ -36,39 +36,51 @@ int s21_strlen(char *str)
         res++;
     return res;
 }
+int intlen(int a)
+{
+    int i = 0;
+    // while (a / 10)
+    for (; a > 0; i++)
+        a /= 10;
+    return i;
+}
 
 void strd(char *str, int digit, int *len, t_flags fl)
 {
     char buf[256] = {0};
     char tmp[256] = {0};
     int i = 0;
+    int j = 0;
     // int dd = digit;
     if ((fl.fspace || fl.fplus) && digit >= 0)
     {
         if (fl.fplus)
-            str[*len] = '+';
+            buf[intlen(digit)] = '+';
         else
-            str[*len] = ' ';
-        fl.width--;
-        (*len)++;
+            buf[intlen(digit)] = ' ';
+        // (*len)++;
+        j++;
     }
     if (digit <= 0)
     {
         if (digit == 0)
+        {
             buf[i] = '0';
+            i++;
+        }
         else
         {
-            buf[i] = '-';
             digit *= -1;
+            buf[intlen(digit)] = '-';
+            j++;
         }
-        i++;
     }
     for (; digit > 0; i++)
     {
         buf[i] = digit % 10 + '0';
         digit /= 10;
     }
-    buf[i] = '\0';
+    buf[i + j] = '\0';
     int strlen = s21_strlen(buf) - 1;
     if (fl.width)
     {
@@ -196,7 +208,7 @@ int main()
     char a = 'Q';
     int b = 321001;
     int res = 0;
-    res = s21_sprintf(str, "%+d\n", -10);
+    res = s21_sprintf(str, "% 10d\n", -10);
     printf("%s%d\n", str, res);
     return 0;
 }
