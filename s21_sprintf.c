@@ -196,7 +196,7 @@ int main()
     char a = 'Q';
     int b = 321001;
     int res = 0;
-    res = s21_sprintf(str, "%+d\n", 0);
+    res = s21_sprintf(str, "%+d\n", -10);
     printf("%s%d\n", str, res);
     return 0;
 }
