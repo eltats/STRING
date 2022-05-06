@@ -159,6 +159,8 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
     {
         char *tmp = va_arg(argp, char *);
         fl.width -= s21_strlen(tmp);
+        if (fl.width <= 0)
+            fl.fminus = 0;
         if (fl.width > 0 && fl.fminus)
         {
             s21_strcat(str, tmp);
@@ -211,7 +213,7 @@ int main()
     char a = 'Q';
     int b = 321001;
     int res = 0;
-    res = sprintf(str, "HELLO %-1% %-1s%-5d  %-1c\n", "JOHN", 228, 'K');
+    res = s21_sprintf(str, "HELLO %1% %1s%5d  %1c\n", "JOHN", 228, 'K');
     printf("%s%d\n", str, res);
     return 0;
 }
