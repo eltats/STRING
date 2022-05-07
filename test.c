@@ -24,7 +24,21 @@ int main(void)
 	// a = a / 10;
 	// xmp[3] = (a % 10) + 48;
 	// xmp[4] = '\0';
-	 int a = 1234567123;
-	printf("%ld\n", a);
+	//  int a = 1234567123;
+	// float a = 10.123;
+	// char str[80] = {};
+	// int tmp = 0;
+	// for (int i = 0; i < 6; i++)
+	// {
+	// 	tmp = (int)a;
+	// 	for (int j = i; tmp > 0; j++)
+	// 	{
+	// 		str[j] = tmp % 10 + '0';
+	// 		tmp /= 10;
+	// 	}
+	// 	a -= (int)a;
+	// 	a *= 10;
+	// }
+	printf("%+f\n", 0.123);
 	return 0;
 }

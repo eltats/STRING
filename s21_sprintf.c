@@ -134,7 +134,60 @@ void strd(char *str, long digit, int *len, t_flags fl)
 
 void strf(char *str, double fdigit, int *len, t_flags fl)
 {
-
+    char buf[256] = {0};
+    char btmp[256] = {0};
+    int i = 0;
+    long int tmp = 0;
+    long int numlen = 0;
+    if (!fl.precision)
+        fl.precision = 6;
+    tmp = (int)fdigit;
+    fdigit -= (int)fdigit;
+    numlen = intlen(tmp);
+    if (tmp >= 0 && (fl.fplus || fl.fspace))
+    {
+        if (fl.fplus)
+            buf[numlen] = '+';
+        else
+            buf[numlen] = ' ';
+    }
+    if (tmp < 0)
+    {
+        buf[numlen] = '-';
+        tmp *= -1;
+        fdigit *= -1;
+    }
+    if (tmp == 0)
+        buf[i] = '0';
+    for (; tmp > 0; i++)
+    {
+        buf[i] = tmp % 10 + '0';
+        tmp /= 10;
+    }
+    int strlen = s21_strlen(buf) - 1;
+    i = 0;
+    for (; buf[i]; i++, strlen--)
+        btmp[i] = buf[strlen];
+    tmp = 0;
+    strlen = s21_strlen(btmp);
+    btmp[strlen] = '.';
+    strlen++;
+    for (; fl.precision; fl.precision--, strlen++)
+    {
+        fdigit *= 10;
+        tmp = (int)fdigit;
+        btmp[strlen] = tmp % 10 + '0';
+        fdigit -= (int)fdigit;
+    }
+    fl.width -= strlen;
+    if (fl.width > 0 && !fl.fminus)
+        for (; fl.width; fl.width--, (*len)++)
+            str[*len] = ' ';
+    s21_strcat(str, btmp);
+    *len += s21_strlen(btmp);
+    if (fl.width > 0 && fl.fminus)
+        for (; fl.width; fl.width--, (*len)++)
+            str[*len] = ' ';
 }
 
 void processing(char *str, const char *format, int *len, va_list argp, int *i)
@@ -277,10 +330,11 @@ int main()
 {
     char str[100] = {};
     char a = 'Q';
-    long int b = 2147483649;
-    char *format = "%hd\n";
-    char *ex = "HIBITCHES"; 
-    int res = s21_sprintf(str, format,  b);
+    float b = 0.123;
+    char *format = "%+-10.3f\n";
+    char *ex = "HIBITCHES";
+    int res = 0;
+    res = s21_sprintf(str, format,  b);
     printf("%s%d\n", str, res);
     res = sprintf(str, format, b);
     printf("%s%d\n", str, res);
