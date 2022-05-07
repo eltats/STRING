@@ -276,6 +276,7 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
             int res = va_arg(argp, int);
             digit = res;
         }
+        if (digit == 0 && fl.precision )
         strd(str, digit, len, fl);
     }
     if (*(format + *i) == 's')
@@ -330,8 +331,8 @@ int main()
 {
     char str[100] = {};
     char a = 'Q';
-    float b = 0.123;
-    char *format = "%+-10.3f\n";
+    int b = 0;
+    char *format = "%d\n";
     char *ex = "HIBITCHES";
     int res = 0;
     res = s21_sprintf(str, format,  b);
