@@ -196,6 +196,7 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
     fl.width = 0;
     fl.fminus = 0;
     fl.fplus = 0;
+    fl.pr = 0;
     fl.precision = 0;
     fl.fspace = 0;
     fl.fh = 0;
@@ -212,6 +213,7 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
             (*i)++;
             for (; is_digit(format[*i]); (*i)++)
                 fl.precision = (fl.precision * 10) + (format[*i] - '0');
+            fl.pr = 1;
             continue;
         }
         if (format[*i] == '-')
@@ -257,7 +259,7 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
         (*len)++;
         }
     }
-    if (*(format + *i) == 'd')
+    if (*(format + *i) == 'd' || *(format + *i) == 'i')
     {
         int res = 0;
         long digit = 0;
@@ -276,7 +278,8 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
             int res = va_arg(argp, int);
             digit = res;
         }
-        if (digit == 0 && fl.precision )
+        if (digit == 0 && fl.pr && fl.precision == 0)
+            return ;
         strd(str, digit, len, fl);
     }
     if (*(format + *i) == 's')
@@ -331,8 +334,8 @@ int main()
 {
     char str[100] = {};
     char a = 'Q';
-    int b = 0;
-    char *format = "%d\n";
+    int b = 1;
+    char *format = "%.0d\n";
     char *ex = "HIBITCHES";
     int res = 0;
     res = s21_sprintf(str, format,  b);

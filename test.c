@@ -39,6 +39,6 @@ int main(void)
 	// 	a -= (int)a;
 	// 	a *= 10;
 	// }
-	printf("%+f\n", 0.123);
+	printf("%u\n", 10);
 	return 0;
 }
