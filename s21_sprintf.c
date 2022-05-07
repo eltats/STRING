@@ -132,6 +132,11 @@ void strd(char *str, long digit, int *len, t_flags fl)
             str[*len] = ' ';
 }
 
+void strf(char *str, double fdigit, int *len, t_flags fl)
+{
+
+}
+
 void processing(char *str, const char *format, int *len, va_list argp, int *i)
 {
     t_flags fl = {};
@@ -241,6 +246,11 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
             *len += fl.precision;
         }
     }
+    if (*(format + *i) == 'f')
+    {
+        double fdigit = va_arg(argp, double);
+        strf(str, fdigit, len, fl);
+    }
 }
 
 int s21_sprintf(char *str,  char *format, ...)
@@ -269,7 +279,7 @@ int main()
     char a = 'Q';
     long int b = 2147483649;
     char *format = "%hd\n";
-    char *ex = "HIBITCHES";
+    char *ex = "HIBITCHES"; 
     int res = s21_sprintf(str, format,  b);
     printf("%s%d\n", str, res);
     res = sprintf(str, format, b);
