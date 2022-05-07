@@ -9,6 +9,8 @@ typedef struct s_flags
 	short int fminus;
 	short int fplus;
 	short int fspace;
+	short int fh;
+	short int fl;
 	int precision;
 }			t_flags;
 int s21_memcmp(const void *str1, const void *str2, size_t n);

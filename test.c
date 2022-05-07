@@ -24,6 +24,7 @@ int main(void)
 	// a = a / 10;
 	// xmp[3] = (a % 10) + 48;
 	// xmp[4] = '\0';
-	printf("%10%\n");
+	 int a = 1234567123;
+	printf("%ld\n", a);
 	return 0;
 }

@@ -1,6 +1,7 @@
 #include "s21_string.h"
 // %[%][width][.precision][size]type, flags can be placed in any order << ORDER
 // КАКИЕ_ТО ФУНКЦИИ ИСПОЛЬЗОВАНЫ ИЗ СТРИНГ Х/ ВЗЯТЬ НАШИ КОГДА БУДУТ ВСЕ 20 ФУНКЦИЙ
+// СВОИ НУЛЛ И САЙЗ Т
 int is_digit(int c)
 {
     if (c >= '0' && c <= '9')
@@ -53,7 +54,7 @@ int s21_strlen(char *str)
         res++;
     return res;
 }
-int intlen(int a)
+int intlen(long a)
 {
     int i = 0;
     if (a < 0)
@@ -66,13 +67,13 @@ int intlen(int a)
     return i;
 }
 
-void strd(char *str, int digit, int *len, t_flags fl)
+void strd(char *str, long digit, int *len, t_flags fl)
 {
     char buf[256] = {0};
     char tmp[256] = {0};
     int i = 0;
     int j = 0;
-    int numlen = intlen(digit);
+    long int numlen = intlen(digit);
     // int dd = digit;
     if (fl.precision > numlen)
     {
@@ -139,9 +140,15 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
     fl.fplus = 0;
     fl.precision = 0;
     fl.fspace = 0;
+    fl.fh = 0;
+    fl.fl = 0;
     (*i)++;
     while (is_flag(format[*i]) == 0)
     {
+        if (format[*i] == 'h')
+            fl.fh = 1;
+        if (format[*i] == 'l')
+            fl.fl = 1;
         if (format[*i] == '.')
         {
             (*i)++;
@@ -194,8 +201,23 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
     }
     if (*(format + *i) == 'd')
     {
-        int digit = 0;
-        digit = va_arg(argp, int);
+        int res = 0;
+        long digit = 0;
+        if (fl.fh)
+        {
+            short int res = (short)va_arg(argp, int);
+            digit = res;
+        }
+        if (fl.fl)
+        {
+            long res = (long int)va_arg(argp, long int);
+            digit = res;
+        }
+        else if (!fl.fl && !fl.fh)
+        {
+            int res = va_arg(argp, int);
+            digit = res;
+        }
         strd(str, digit, len, fl);
     }
     if (*(format + *i) == 's')
@@ -245,12 +267,12 @@ int main()
 {
     char str[100] = {};
     char a = 'Q';
-    int b = 10;
-    char *format = "%5s\n";
+    long int b = 2147483649;
+    char *format = "%hd\n";
     char *ex = "HIBITCHES";
-    int res = s21_sprintf(str, format,  ex);
+    int res = s21_sprintf(str, format,  b);
     printf("%s%d\n", str, res);
-    res = sprintf(str, format,  ex);
-    printf("\n%s%d\n", str, res);
+    res = sprintf(str, format, b);
+    printf("%s%d\n", str, res);
     return 0;
 }
