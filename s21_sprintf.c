@@ -369,16 +369,16 @@ int s21_sprintf(char *str,  char *format, ...) {
     return len;
 }
 
-int main() {
-    char str[100] = {};
-    char a = 'Q';
-    int b = 0;
-    char *format = "%.0d\n";
-    char *ex = "HIBITCHES";
-    int res = 0;
-    res = s21_sprintf(str, format,  b);
-    printf("%s%d\n", str, res);
-    res = sprintf(str, format, b);
-    printf("%s%d\n", str, res);
-    return 0;
-}
+// int main() {
+//     char str[100] = {};
+//     char a = 'Q';
+//     int b = 0;
+//     char *format = "%.0d\n";
+//     char *ex = "HIBITCHES";
+//     int res = 0;
+//     res = s21_sprintf(str, format,  b);
+//     printf("%s%d\n", str, res);
+//     res = sprintf(str, format, b);
+//     printf("%s%d\n", str, res);
+//     return 0;
+// }
