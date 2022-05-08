@@ -7,8 +7,3 @@ char *s21_strchr(const char *str, int c)
 	return ((char *)str);
 }
 
-// int main(){
-// 	char *str = "lobe";
-// 	printf("%s\n", s21_strchr(str, (int)'b'));
-// 	return 0;
-// }

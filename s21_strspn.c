@@ -8,7 +8,3 @@ size_t s21_strspn(const char *str1, const char *str2)
 		res++;
 	return res;
 }
-
-int main(){
-	printf("%lu\n", s21_strspn("hello world", "hn"));
-}

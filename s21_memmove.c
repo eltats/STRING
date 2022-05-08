@@ -1,16 +1,16 @@
 #include "s21_string.h"
 
-void *s21_memmove(void *dest, const void *src, size_t n)
+void *s21_memmove(void *dest, const void *src, s21_size_t n)
 {
-	char *dst;
+	char *dst = s21_NULL;
 	char *s;
-	size_t i;
+	s21_size_t i;
 
 	i = 0;
 	dst = (char *)dest;
 	s = (char *)src;
 	if (!n)
-		return 0;
+		dst = s21_NULL;
 	if (dst < s)
 		while (i < n)
 		{

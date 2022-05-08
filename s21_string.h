@@ -1,8 +1,9 @@
-#include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 
+#define s21_size_t unsigned long long
+#define s21_NULL ((void *)0)
 typedef struct s_flags 
 {
 	int width;
@@ -17,3 +18,4 @@ typedef struct s_flags
 int s21_memcmp(const void *str1, const void *str2, size_t n);
 int is_digit(int c);
 char *s21_strcat(char *dest, const char *src);
+char *s21_strncat(char *dest, const char *src, size_t n);

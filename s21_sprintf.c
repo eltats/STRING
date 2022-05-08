@@ -2,14 +2,15 @@
 // %[%][width][.precision][size]type, flags can be placed in any order << ORDER
 // КАКИЕ_ТО ФУНКЦИИ ИСПОЛЬЗОВАНЫ ИЗ СТРИНГ Х/ ВЗЯТЬ НАШИ КОГДА БУДУТ ВСЕ 20 ФУНКЦИЙ
 // СВОИ НУЛЛ И САЙЗ Т
-int is_digit(int c)
-{
-    if (c >= '0' && c <= '9')
-        return 1;
-    return 0;
-} // В ОТДЕЛЬНЫЙ ФАЙЛ фё
+// int is_digit(int c)
+// {
+//     int ret = 0;
+//     if (c >= '0' && c <= '9')
+//         ret = 1;
+//     return ret;
+// } // В ОТДЕЛЬНЫЙ ФАЙЛ фё
 
-char *s21_strncat(char *dest, const char *src, size_t n)
+char *s21_strncat(char *dest, const char *src, s21_size_t n)
 {
 	int i = 0;
 	int j = 0;
@@ -25,27 +26,28 @@ char *s21_strncat(char *dest, const char *src, size_t n)
 	return dest;
 }
 
-char *s21_strcat(char *dest, const char *src)
-{
-	int i = 0;
-	int j = 0;
+// char *s21_strcat(char *dest, const char *src)
+// {
+// 	int i = 0;
+// 	int j = 0;
 
-	while (dest[i])
-		i++;
-	while (src[j])
-	{
-		dest[i + j] = src[j];
-		j++;
-	}
-	dest[i + j] = '\0';
-	return dest;
-}
+// 	while (dest[i])
+// 		i++;
+// 	while (src[j])
+// 	{
+// 		dest[i + j] = src[j];
+// 		j++;
+// 	}
+// 	dest[i + j] = '\0';
+// 	return dest;
+// }
 
 int is_flag(int c)
 {
+    int ret = 0;
     if (c == 'c' || c == 'd' || c == 'i' || c == 'f' || c == 's' || c == 'u' || c == '%')
-        return 1;
-    return 0;
+        ret = 1;
+    return ret;
 }
 int s21_strlen(char *str)
 {
@@ -61,7 +63,7 @@ int intlen(long a)
         a *= -1;
     // while (a / 10)
     if (a == 0)
-        return 1;
+        i = 1;
     for (; a > 0; i++)
         a /= 10;
     return i;
@@ -278,9 +280,8 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i)
             int res = va_arg(argp, int);
             digit = res;
         }
-        if (digit == 0 && fl.pr && fl.precision == 0)
-            return ;
-        strd(str, digit, len, fl);
+        if (!(digit == 0 && fl.pr && fl.precision == 0))
+            strd(str, digit, len, fl);
     }
     if (*(format + *i) == 's')
     {
@@ -334,7 +335,7 @@ int main()
 {
     char str[100] = {};
     char a = 'Q';
-    int b = 1;
+    int b = 0;
     char *format = "%.0d\n";
     char *ex = "HIBITCHES";
     int res = 0;
