@@ -1,45 +1,4 @@
 #include "s21_string.h"
-// %[%][width][.precision][size]type, flags can be placed in any order << ORDER
-// КАКИЕ_ТО ФУНКЦИИ ИСПОЛЬЗОВАНЫ ИЗ СТРИНГ Х/ ВЗЯТЬ НАШИ КОГДА БУДУТ ВСЕ 20 ФУНКЦИЙ
-// СВОИ НУЛЛ И САЙЗ Т
-// int is_digit(int c)
-// {
-//     int ret = 0;
-//     if (c >= '0' && c <= '9')
-//         ret = 1;
-//     return ret;
-// } // В ОТДЕЛЬНЫЙ ФАЙЛ фё
-/* не мой */
-char *s21_strncat(char *dest, const char *src, s21_size_t n) {
-    int i = 0;
-    int j = 0;
-
-    while (dest[i])
-        i++;
-    while (src[j] && j < n) {
-        dest[i + j] = src[j];
-        j++;
-    }
-    dest[i + j] = '\0';
-    return dest;
-}
-
-// char *s21_strcat(char *dest, const char *src)
-// {
-    // int i = 0;
-    // int j = 0;
-
-    // while (dest[i])
-    //     i++;
-    // while (src[j])
-    // {
-    //     dest[i + j] = src[j];
-    //     j++;
-    // }
-    // dest[i + j] = '\0';
-    // return dest;
-    // }
-
 int is_flag(int c) {
     int ret = 0;
     if (c == 'c' || c == 'd' || c == 'i' || c == 'f' || c == 's' || c == 'u' || c == '%')
@@ -56,7 +15,6 @@ int intlen(long a) {
     int i = 0;
     if (a < 0)
         a *= -1;
-    // while (a / 10)
     if (a == 0)
         i = 1;
     for (; a > 0; i++)
@@ -70,7 +28,6 @@ void strd(char *str, long digit, int *len, t_flags fl) {
     int i = 0;
     int j = 0;
     long int numlen = intlen(digit);
-    // int dd = digit;
     if (fl.precision > numlen) {
         fl.precision -= numlen;
         int prec = fl.precision;
@@ -82,7 +39,6 @@ void strd(char *str, long digit, int *len, t_flags fl) {
             buf[numlen + fl.precision] = '+';
         else
             buf[numlen + fl.precision] = ' ';
-        // (*len)++;
         j++;
     }
     if (digit <= 0) {
@@ -127,7 +83,6 @@ void stru(char *str, unsigned long digit, int *len, t_flags fl) {
     int i = 0;
     int j = 0;
     long int numlen = intlen(digit);
-    // int dd = digit;
     if (fl.precision > numlen) {
         fl.precision -= numlen;
         int prec = fl.precision;
@@ -139,7 +94,6 @@ void stru(char *str, unsigned long digit, int *len, t_flags fl) {
             buf[numlen + fl.precision] = '+';
         else
             buf[numlen + fl.precision] = ' ';
-        // (*len)++;
         j++;
     }
     if (digit <= 0) {
@@ -369,16 +323,3 @@ int s21_sprintf(char *str,  char *format, ...) {
     return len;
 }
 
-// int main() {
-//     char str[100] = {};
-//     char a = 'Q';
-//     int b = 0;
-//     char *format = "%.0d\n";
-//     char *ex = "HIBITCHES";
-//     int res = 0;
-//     res = s21_sprintf(str, format,  b);
-//     printf("%s%d\n", str, res);
-//     res = sprintf(str, format, b);
-//     printf("%s%d\n", str, res);
-//     return 0;
-// }

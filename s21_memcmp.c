@@ -8,7 +8,6 @@ int s21_memcmp(const void *str1, const void *str2, s21_size_t n) {
         n--;
     }
     if (*(char *)str1 != *(char *)str2)
-        ret = 1;
-    // return *((unsigned char *)str1) - *((unsigned char *)str2);
-    return 0;
+        ret = (int)(*((char *)str1) - *((char *)str2));
+    return ret;
 }
