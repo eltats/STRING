@@ -5,12 +5,7 @@ int is_flag(int c) {
         ret = 1;
     return ret;
 }
-int s21_strlen(char *str) {
-    int res = 0;
-    while (str[res])
-        res++;
-    return res;
-}
+
 int intlen(long a) {
     int i = 0;
     if (a < 0)

@@ -5,7 +5,7 @@ char *s21_strrchr(const char *str, int c) {
     s21_size_t i = 0;
     while (str[i] != '\0') {
         if (str[i] == c)
-            last_pos = (char *)str[i];
+            last_pos = (char *)&str[i];
         ++i;
     }
     return last_pos;
