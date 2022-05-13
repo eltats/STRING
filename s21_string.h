@@ -1,7 +1,8 @@
 #include <stdarg.h>
+#include <wchar.h>
 #ifndef S21_STRING_H_
 #define S21_STRING_H_
-#define s21_size_t unsigned long long
+typedef unsigned long long s21_size_t;
 #define s21_NULL ((void *)0)
 typedef struct s_flags {
     int width;
@@ -13,6 +14,9 @@ typedef struct s_flags {
     int precision;
     short int pr;
 }           t_flags;
+
+char *s21_strchr(const char *str, int c);
+char *s21_strerror(int errnum);
 void *s21_memchr(const void *str, int c, s21_size_t n);
 void *s21_memcpy(void *dest, const void *src, s21_size_t n);
 void *s21_memset(void *str, int c, s21_size_t n);

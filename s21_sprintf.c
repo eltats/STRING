@@ -1,10 +1,79 @@
 #include "s21_string.h"
+
+
+// int is_digit(int c) {
+//     int ret = 0;
+//     if (c >= '0' && c <= '9')
+//         ret = 1;
+//     return ret;
+// }
+// s21_size_t s21_strlen(const char *str) {
+//     s21_size_t i = 0;
+
+//     while (str[i] != '\0')
+//         i++;
+//     return i;
+// }
+// char *s21_strncat(char *dest, const char *src, s21_size_t n) {
+//     s21_size_t i = 0;
+//     s21_size_t j = 0;
+
+//     while (dest[i])
+//         i++;
+//     while (src[j] && j < n) {
+//         dest[i + j] = src[j];
+//         j++;
+//     }
+//     dest[i + j] = '\0';
+//     return dest;
+// }
+
+// char *s21_strcat(char *dest, const char *src) {
+//     int i = 0;
+//     int j = 0;
+
+//     while (dest[i])
+//         i++;
+//     while (src[j]) {
+//         dest[i + j] = src[j];
+//         j++;
+//     }
+//     dest[i + j] = '\0';
+//     return dest;
+// }
+
+
+
 int is_flag(int c) {
     int ret = 0;
     if (c == 'c' || c == 'd' || c == 'i' || c == 'f' || c == 's' || c == 'u' || c == '%')
         ret = 1;
     return ret;
 }
+
+char *s21_wstrncat(char *dest, const wchar_t *src, s21_size_t n) {
+    s21_size_t i = 0;
+    s21_size_t j = 0;
+
+    while (dest[i])
+        i++;
+    while (src[j] && j < n) {
+        dest[i + j] = src[j];
+        j++;
+    }
+    dest[i + j] = '\0';
+    return dest;
+}
+
+
+s21_size_t s21_wstrlen(const wchar_t *str) {
+    s21_size_t i = 0;
+
+    while (str[i] != '\0')
+        i++;
+    return i;
+}
+
 
 int intlen(long a) {
     int i = 0;
@@ -222,7 +291,23 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i) {
     }
     if (fl.fplus && fl.fspace)
         fl.fspace = 0;
-    if (*(format + *i) == '%' || *(format + *i) == 'c') {
+    if (*(format + *i) == 'c' && fl.fl) {
+        wint_t tmp = (wint_t)va_arg(argp, wint_t);
+        if (fl.width && fl.fminus == 1) {
+            str[*len] = tmp;
+            (*len)++;
+            for (int j = 0; j < fl.width - 1; j++, (*len)++)
+                str[*len] = ' ';
+        } else {
+        if (fl.width && !fl.fminus) {
+            for (int j = 0; j < fl.width - 1; j++, (*len)++)
+                str[*len] = ' ';
+        }
+        str[*len] = tmp;
+        (*len)++;
+        }
+    }
+    if (*(format + *i) == '%' || (*(format + *i) == 'c' && !fl.fl)) {
         if (fl.width && fl.fminus == 1) {
             if (*(format + *i) == '%')
                 str[*len] = *(format + *i);
@@ -257,6 +342,7 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i) {
             int res = va_arg(argp, int);
             digit = res;
         }
+        res = 0;
         if (!(digit == 0 && fl.pr && fl.precision == 0))
             strd(str, digit, len, fl);
     }
@@ -264,7 +350,7 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i) {
         unsigned int res = 0;
         unsigned long digit = 0;
         if (fl.fh) {
-            unsigned short int res = (short)va_arg(argp, unsigned int);
+            unsigned short int res = (unsigned short)va_arg(argp, unsigned int);
             digit = res;
         }
         if (fl.fl) {
@@ -274,29 +360,55 @@ void processing(char *str, const char *format, int *len, va_list argp, int *i) {
             unsigned int res = va_arg(argp, unsigned int);
             digit = res;
         }
+        res = 0;
         if (!(digit == 0 && fl.pr && fl.precision == 0))
             stru(str, digit, len, fl);
     }
     if (*(format + *i) == 's') {
-        char *tmp = va_arg(argp, char *);
-        if (fl.precision >= s21_strlen(tmp) || fl.precision == 0)
-            fl.precision = s21_strlen(tmp);
-        fl.width -= fl.precision;
-        if (fl.width <= 0)
-            fl.fminus = 0;
-        if (fl.width > 0 && fl.fminus) {
-            s21_strncat(str, tmp, fl.precision);
-            *len += fl.precision;
-        }
-        for (; fl.width > 0; fl.width--, (*len)++)
-            str[*len] = ' ';
-        if (!fl.fminus) {
-            s21_strncat(str, tmp, fl.precision);
-            *len += fl.precision;
+        if (fl.fl) {
+            wchar_t *tmp;
+            tmp = (wchar_t *)va_arg(argp, wchar_t *);
+            if (fl.precision >= (int)s21_wstrlen(tmp) || fl.precision == 0)
+                fl.precision = s21_wstrlen(tmp);
+            fl.width -= fl.precision;
+            if (fl.width <= 0)
+                fl.fminus = 0;
+            if (fl.width > 0 && fl.fminus) {
+                s21_wstrncat(str, tmp, fl.precision);
+                *len += fl.precision;
+            }
+            for (; fl.width > 0; fl.width--, (*len)++)
+                str[*len] = ' ';
+            if (!fl.fminus) {
+                s21_wstrncat(str, tmp, fl.precision);
+                *len += fl.precision;
+            }
+        } else {
+            char *tmp;
+            tmp = va_arg(argp, char *);
+            if (fl.precision >= (int)s21_strlen(tmp) || fl.precision == 0)
+                fl.precision = s21_strlen(tmp);
+            fl.width -= fl.precision;
+            if (fl.width <= 0)
+                fl.fminus = 0;
+            if (fl.width > 0 && fl.fminus) {
+                s21_strncat(str, tmp, fl.precision);
+                *len += fl.precision;
+            }
+            for (; fl.width > 0; fl.width--, (*len)++)
+                str[*len] = ' ';
+            if (!fl.fminus) {
+                s21_strncat(str, tmp, fl.precision);
+                *len += fl.precision;
+            }
         }
     }
     if (*(format + *i) == 'f') {
-        double fdigit = va_arg(argp, double);
+        double fdigit = 0;
+        if (fl.fl)
+            fdigit = va_arg(argp, double);
+        else
+            fdigit = (float)va_arg(argp, double);
         strf(str, fdigit, len, fl);
     }
 }
@@ -318,3 +430,9 @@ int s21_sprintf(char *str,  char *format, ...) {
     return len;
 }
 
+// int main()
+// {
+//     char buf[100] = {};
+//     s21_sprintf(buf, "%d", -12);
+//     printf("%s\n", buf);
+// }

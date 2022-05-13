@@ -1,0 +1,7 @@
+s21_memcpy.o s21_sprintf.o \
+	s21_strcmp.o s21_strerror.o s21_strncat.o \
+	s21_strpbrk.o s21_strstr.o s21_memchr.o \
+	s21_memmove.o s21_strcat.o s21_strcpy.o \
+	s21_strncmp.o s21_strrchr.o s21_strtok.o
+	s21_memcmp.o s21_memset.o s21_strchr.o s21_strcspn.o \
+	s21_strlen.o s21_strncpy.o s21_strspn.o 
