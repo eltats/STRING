@@ -2,11 +2,12 @@
 
 void *s21_memchr(const void *str, int c, s21_size_t n) {
     void *ptr = s21_NULL;
+    int flag = 0;
     s21_size_t res = -1;
-    for (s21_size_t i = 0; i < n; i++) {
+    for (s21_size_t i = 0; i < n && !flag; i++) {
         if (*((char *)str + i) == (char)c) {
             res = i;
-            break;
+            flag = 1;
         }
         --n;
     }

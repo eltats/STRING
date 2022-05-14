@@ -88,32 +88,23 @@
 char *s21_strerror(int errnum)
 {
     char *errors[] = errlist;
-    char *buf = (char *)calloc(256, sizeof(char));
+    char *buf = s21_NULL;
+    buf = (char *)malloc(sizeof(char) * (1024));
+    s21_memset((void *)buf, '\0', 1024);
     if (errnum < 0 || errnum > MAX_ERROR) {
-       s21_sprintf(buf, "Unknown error: %d", errnum);
+        s21_sprintf(buf, "Unknown error: %d", errnum);
     }
     else
         s21_strcat(buf, errors[errnum]);
     return buf;
 }
  
-// int main()
-// {
-    // printf("%s\n", s21_strerror(70));
-    // for (int i = 0; i < 200; i++) {
-    //     char *src = s21_strerror(131);
-    //     printf("%s\n", src);
-    //    printf("%s\n", s21_strerror(131));
-    //    printf("%s\n", s21_strerror(5));.
-    //    printf("%s\n", s21_strerror(-12));
-    //           printf("%s\n", s21_strerror(15));
-    //           printf("%s\n", s21_strerror(131));
-    //                  printf("\n\n%s\n", strerror(0));
-    //    printf("%s\n", strerror(5));
-    //    printf("%s\n", strerror(-12));
-    //           printf("%s\n", strerror(15));
-    //                         printf("%s\n", strerror(131));
-    // }
-    // printf("%s\n", strerror(-40000));
-    // return 0;
-// }
+int main()
+{
+    for (int i = 107; i < 200; i++) {
+        char *src = s21_strerror(i);
+        printf("%s\n", src);
+        free(src);
+    }
+    return 0;
+}
